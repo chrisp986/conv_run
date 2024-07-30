@@ -1,5 +1,5 @@
 <script>
-	let minPerMile = 8; // Initial value for the slider
+	let minPerMile = 8; // Initial value
 	let minPerKm = convertMinPerMileToKm(minPerMile);
 
 	function convertMinPerMileToKm(minutesPerMile) {
@@ -24,16 +24,19 @@
 <div class="container">
 	<form>
 		<label for="minPerMile">Minutes per Mile:</label>
-		<input
-			type="range"
-			id="minPerMile"
-			min="1"
-			max="15"
-			step="0.05"
-			bind:value={minPerMile}
-			on:input={handleMinPerMileChange}
-			class="slider"
-		/>
+		<div class="rotating-menu">
+			<select
+				id="minPerMile"
+				bind:value={minPerMile}
+				on:change={handleMinPerMileChange}
+			>
+				{#each Array(281)
+					.fill(0)
+					.map((_, i) => (i / 20 + 1).toFixed(2)) as value}
+					<option {value}>{value}</option>
+				{/each}
+			</select>
+		</div>
 		<input
 			type="number"
 			id="minPerMileNumber"
@@ -45,9 +48,22 @@
 
 	<form>
 		<label for="minPerKm">Minutes per Kilometer:</label>
+		<div class="rotating-menu">
+			<select
+				id="minPerKm"
+				bind:value={minPerKm}
+				on:change={handleMinPerKmChange}
+			>
+				{#each Array(281)
+					.fill(0)
+					.map((_, i) => (i / 20 + 0.62).toFixed(2)) as value}
+					<option {value}>{value}</option>
+				{/each}
+			</select>
+		</div>
 		<input
 			type="number"
-			id="minPerKm"
+			id="minPerKmNumber"
 			step="0.05"
 			bind:value={minPerKm}
 			on:input={handleMinPerKmChange}
@@ -76,26 +92,22 @@
 	}
 
 	input,
-	button,
-	.slider {
+	select,
+	button {
 		margin-bottom: 1rem;
 		padding: 0.5rem;
 		font-size: 1rem;
 		width: 100%;
 	}
 
-	.slider {
-		-webkit-appearance: none;
-		appearance: none;
-		height: 10px;
-		background: #ddd;
-		outline: none;
-		opacity: 0.7;
-		transition: opacity 0.2s;
+	.rotating-menu {
+		display: flex;
+		align-items: center;
+		justify-content: center;
 	}
 
-	.slider:hover {
-		opacity: 1;
+	.rotating-menu select {
+		font-size: 1rem;
 	}
 
 	@media (min-width: 600px) {
